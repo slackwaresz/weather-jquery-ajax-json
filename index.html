@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+ 
+
+    <title>Weather</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="http://apps.bdimg.com/libs/todc-bootstrap/3.1.1-3.2.1/todc-bootstrap.min.css">
+
+
+    <!-- Custom styles for this template -->
+    <link href="weather.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+ <div class="container" style="max-width: 600px;margin: auto">
+	        
+	<div class="card card-shadow text-center font-size-16 hide" style="width: 100%;margin: auto;margin-bottom: 60px" id="weather-box">
+            <div class="card-block p-0">
+              <div class="bg-purple-600 p-30 white ">
+	              <div id="condition-icon">
+
+	              </div>
+                <div>
+	            <span class="font-size-40" id="temp"></span><span id="aqi"></span>
+                </div>
+            
+                <div id="condition">
+	            </div>
+              </div>
+              <div class="bg-white p-30">
+                <div class="blue-grey-700">
+				<span class="font-size-20" id="cityname"></span>
+                  <span class="font-size-18" id="country"></span>
+                </div>
+                <div>
+                  <span class="mr-5" id="time"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+<div class="row mx-auto" style="width: 300px">
+<form id="my-form">
+<input type="text" id="city" name="city" placeholder="北京" form-control class="btn-lg" />
+<button type="submit" class="btn bg-purple-600 btn-lg" style="color: #FFF">查询天气</button>
+</form>
+</div>
+</div>
+
+    
+    
+
+
+<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="skycons/skycons.js"></script>
+<script>
+    (function($){
+        function processForm( e ){
+            $.ajax({
+                url: 'http://jisutqybmf.market.alicloudapi.com/weather/query',
+                headers: {'Authorization': "APPCODE a87510fe394444f6901fc74200161579"},
+                dataType: 'json',
+// 				contentType: 'application/json',
+                type: 'get',
+//                 data: JSON.stringify( { "cityId": $('#cityId').val() } ),
+                data: $(this).serialize(),
+                processData: false,                               
+                 success: function(data)
+             {
+	 console.log(data);
+	 
+	 
+	 cityname = data.result.city;
+	 condition = data.result.weather;
+	 temp = data.result.temp;
+	 humidity = data.result.humdity;
+	 windDir = data.result.winddirect;
+	 windLevel = data.result.windpower;
+	 time = data.result.updatetime;
+	 icon = data.result.img;
+	 aqi =  data.result.aqi.aqi
+	 
+		 $("#temp").html(
+          temp + '&#176' +'C'
+        );
+        
+        		 $("#aqi").html(
+          ' / AQI:' + aqi
+        );
+        
+        
+		$("#condition").html(
+         condition
+        );
+		$("#cityname").html(
+           cityname
+        );       
+			$("#country").html(
+         country
+        );
+		$("#time").html(
+         time
+        );  
+
+        $("#condition-icon").html(
+         '<canvas id="icon'+icon+'" width="64" height="64"></canvas>'
+        );  
+
+
+   var skycons = new Skycons({"color": "white"});  
+   skycons.add("icon1", Skycons.PARTLY_CLOUDY_DAY);
+   skycons.add("icon31", Skycons.PARTLY_CLOUDY_NIGHT);
+   skycons.add("icon0", Skycons.CLEAR_DAY);
+   skycons.add("icon30", Skycons.CLEAR_NIGHT);
+   skycons.add("icon8", Skycons.RAIN);
+   skycons.add("icon3", Skycons.RAIN);
+   skycons.add("icon2", Skycons.CLOUDY);
+   skycons.add("icon18", Skycons.FOG);
+   skycons.add("icon6", Skycons.SLEET);
+   
+   
+   
+   
+
+      skycons.play();
+             
+
+//         alert("Form submitted successfully.\nReturned json: " + data["json"]);
+      
+ }
+ 
+            });
+
+            e.preventDefault();
+        }
+
+        $('#my-form').submit( processForm );
+        $("button").click(function(){
+  $("#weather-box").fadeIn(2000);
+});
+        
+    })(jQuery);
+</script>
+
+
+<script src="http://apps.bdimg.com/libs/bootstrap/3.3.4/js/bootstrap.min.js" ></script>
+
+
+</body>
+</html>
